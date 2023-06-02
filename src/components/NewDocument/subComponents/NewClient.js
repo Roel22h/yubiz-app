@@ -9,12 +9,50 @@ import {
 } from 'react-native';
 
 import { Picker } from '@react-native-picker/picker';
+import { IDENTITYDOCUMENT } from '../../Constants';
 
-const NewClient = ({ onCloseNewClientModal }) => {
-	const [selectedLanguage, setSelectedLanguage] = useState();
+const NewClient = ({ onSetNewClient, onCloseNewClientModal }) => {
+	const [documentType, setDocumentType] = useState(IDENTITYDOCUMENT.DNI.TYPE);
+	const [documentNumber, setDocumentNumber] = useState('');
+	const [description, setDescription] = useState('');
+	const [address, setaddress] = useState('');
 
 	const saveNewClient = () => {
-		console.log('Guardando');
+		if (!documentType || !documentNumber || !description) {
+			alert('Por favor, completa todos los campos obligatorios.');
+			return;
+		}
+
+		if ((documentNumber.trim()).length != 8 && (documentNumber.trim()).length != 11) {
+			alert('Tipo de documento incorrecto.');
+			return;
+		}
+
+		if ((documentNumber.trim()).length != 8 && (IDENTITYDOCUMENT.DNI.TYPE == documentType)) {
+			alert('DNI incorrecto.');
+			return;
+		}
+
+		if ((documentNumber.trim()).length != 11 && (IDENTITYDOCUMENT.RUC.TYPE == documentType)) {
+			alert('RUC incorrecto.');
+			return;
+		}
+
+		// TODO Guardar cliente en base de datos.
+
+		const NewClient = getFormNewClient();
+		onCloseNewClientModal();
+		onSetNewClient(NewClient);
+	}
+
+	const getFormNewClient = () => {
+		return {
+			id: 22,
+			description: description,
+			documentType: documentType,
+			documentNumber: documentNumber,
+			address: address
+		}
 	}
 
 	return (
@@ -26,29 +64,31 @@ const NewClient = ({ onCloseNewClientModal }) => {
 				<ScrollView style={[styles.container, { height: 450 }]} >
 					<Picker
 						style={styles.selectInputStyle}
-						selectedValue={selectedLanguage}
+						selectedValue={documentType}
 						onValueChange={(itemValue, itemIndex) =>
-							setSelectedLanguage(itemValue)
+							setDocumentType(itemValue)
 						}>
-						<Picker.Item label="DNI" value="DNI" />
-						<Picker.Item label="RUC" value="RUC" />
+						<Picker.Item label={IDENTITYDOCUMENT.DNI.DESCRIPTION} value={IDENTITYDOCUMENT.DNI.TYPE} />
+						<Picker.Item label={IDENTITYDOCUMENT.RUC.DESCRIPTION} value={IDENTITYDOCUMENT.RUC.TYPE} />
 					</Picker>
 					<TextInput
 						style={styles.textInputStyle}
 						keyboardType='numeric'
 						placeholder="Numero de Documento"
+						value={documentNumber}
+						onChangeText={setDocumentNumber}
 					/>
 					<TextInput
 						style={styles.textInputStyle}
 						placeholder="Razon social"
+						value={description}
+						onChangeText={setDescription}
 					/>
 					<TextInput
 						style={styles.textInputStyle}
 						placeholder="Dirección"
-					/>
-					<TextInput
-						style={styles.textInputStyle}
-						placeholder="Ciudad"
+						value={address}
+						onChangeText={setaddress}
 					/>
 				</ScrollView>
 				<View style={styles.row}>
@@ -73,6 +113,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 16,
 		backgroundColor: '#ffffff',
+	},
+	text_modaltitle: {
+		color: '#ffffff',
+		fontSize: 20,
+		textAlign: 'center'
 	},
 	row: {
 		height: 50,

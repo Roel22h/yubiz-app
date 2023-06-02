@@ -16,21 +16,21 @@ import NewClient from "./NewClient";
 const dataClients = [
 	{
 		id: 1,
-		razonSocial: 'Roel W. Gamarra Chipa',
+		description: 'Roel W. Gamarra Chipa',
 		documentType: 1,
 		documentNumber: '12341234',
 		address: 'Av. general 123',
 	},
 	{
 		id: 2,
-		razonSocial: 'Cristian Serrano juro',
+		description: 'Cristian Serrano juro',
 		documentType: 1,
 		documentNumber: '98765432',
 		address: 'Av. Test',
 	},
 	{
 		id: 3,
-		razonSocial: 'Araceli Chacon herrera',
+		description: 'Araceli Chacon herrera',
 		documentType: 2,
 		documentNumber: '20122334122',
 		address: 'Av. Olivo',
@@ -61,10 +61,11 @@ const ListClients = ({ onSelectClient, onCloseClientListModal }) => {
 				onPress={() => {
 					setSelectedClient(item);
 					onSelectClient(item);
+					onCloseClientListModal();
 				}}
 			>
 				<Text style={styles.text_label}>{item.documentType + ' : ' + item.documentNumber}</Text>
-				<Text style={styles.text_bold}>{item.razonSocial}</Text>
+				<Text style={styles.text_bold}>{item.description}</Text>
 			</TouchableOpacity>
 		);
 	};
@@ -77,6 +78,11 @@ const ListClients = ({ onSelectClient, onCloseClientListModal }) => {
 		setModalNewClientVisible(false);
 	};
 
+	const setNewClient = (client) => {
+		onCloseClientListModal();
+		onSelectClient(client);
+	}
+
 	return (
 		<View style={styles.container}>
 
@@ -85,7 +91,7 @@ const ListClients = ({ onSelectClient, onCloseClientListModal }) => {
 				animationType={"fade"}
 				transparent={true}
 			>
-				<NewClient onCloseNewClientModal={closeNewClientModal} />
+				<NewClient onSetNewClient={setNewClient} onCloseNewClientModal={closeNewClientModal} />
 			</Modal>
 
 			<TextInput

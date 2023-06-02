@@ -1,10 +1,12 @@
+import React from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 import { Link } from 'react-router-native';
 
 const Main = () => {
 	return (
 		<View style={styles.container}>
-			<Text style={styles.name_app} >Yubiz</Text>
+			<Text style={styles.name_app}>Yubiz</Text>
 			<Link style={styles.linkButton} to="/newDocument">
 				<Text style={styles.textButton}>Nuevo documento</Text>
 			</Link>
